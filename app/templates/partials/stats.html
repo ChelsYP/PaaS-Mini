@@ -1,0 +1,56 @@
+<!-- Fragmen HTMX: app/templates/partials/stats.html -->
+<div class="space-y-4 font-mono text-xs" id="app-stats-content">
+  <div class="flex items-center justify-between text-[11px] text-zinc-500 pb-2 border-b border-zinc-800">
+    <div class="flex items-center space-x-1.5">
+      <span class="w-2 h-2 rounded-full {% if stats and stats.cpu_percent is defined %}bg-emerald-500 animate-pulse{% else %}bg-zinc-600{% endif %}"></span>
+      <span class="text-zinc-400">Live Metrik Kontainer</span>
+    </div>
+    <span class="text-[10px]">Pembaruan terakhir: {{ stats.updated_at if stats and stats.updated_at else 'baru saja' }}</span>
+  </div>
+
+  <div>
+    <div class="flex items-center justify-between mb-1.5">
+      <span class="text-zinc-400">Pemakaian CPU</span>
+      <span class="text-zinc-200 font-semibold">
+        {% if stats and stats.cpu_percent is defined %}{{ stats.cpu_percent|round(1) }}%{% else %}0.0%{% endif %}
+        <span class="text-zinc-500 font-normal">/ {{ app.cpu if app else 0.5 }} Core</span>
+      </span>
+    </div>
+    <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+      {% set cpu_pct = stats.cpu_percent if stats and stats.cpu_percent is defined else 0 %}
+      <div 
+        class="h-full {% if cpu_pct > 80 %}bg-rose-500{% elif cpu_pct > 50 %}bg-amber-500{% else %}bg-indigo-500{% endif %} transition-all duration-500 rounded-full"
+        style="width: {{ [cpu_pct, 100]|min }}%;"
+      ></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="flex items-center justify-between mb-1.5">
+      <span class="text-zinc-400">Pemakaian Memori (RAM)</span>
+      <span class="text-zinc-200 font-semibold">
+        {% if stats and stats.mem_used_mb is defined %}{{ stats.mem_used_mb|round(1) }} MB{% else %}0.0 MB{% endif %}
+        <span class="text-zinc-500 font-normal">/ {{ app.mem_mb if app else 256 }} MB</span>
+      </span>
+    </div>
+    <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+      {% set mem_pct = stats.mem_percent if stats and stats.mem_percent is defined else 0 %}
+      <div 
+        class="h-full {% if mem_pct > 85 %}bg-rose-500{% elif mem_pct > 65 %}bg-amber-500{% else %}bg-emerald-500{% endif %} transition-all duration-500 rounded-full"
+        style="width: {{ [mem_pct, 100]|min }}%;"
+      ></div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] text-zinc-400">
+    <div class="p-2 bg-zinc-950 rounded border border-zinc-800/80">
+      <div class="text-[10px] text-zinc-500">Network RX (Masuk)</div>
+      <div class="text-zinc-200 mt-0.5">{{ stats.net_rx if stats and stats.net_rx else '0 KB' }}</div>
+    </div>
+    <div class="p-2 bg-zinc-950 rounded border border-zinc-800/80">
+      <div class="text-[10px] text-zinc-500">Network TX (Keluar)</div>
+      <div class="text-zinc-200 mt-0.5">{{ stats.net_tx if stats and stats.net_tx else '0 KB' }}</div>
+    </div>
+  </div>
+</div>
+

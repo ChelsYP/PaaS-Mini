@@ -1,0 +1,16 @@
+<!-- Fragmen HTMX: app/templates/partials/logs.html -->
+{% if logs %}
+<div class="space-y-0.5" id="log-lines-container">
+  {% for line in logs %}
+  <div class="flex items-start hover:bg-zinc-900/60 py-0.5 px-2 rounded -mx-2 transition-colors">
+    <span class="text-zinc-600 select-none mr-3 text-[10px] w-8 text-right font-mono">{{ loop.index }}</span>
+    <span class="text-zinc-300 whitespace-pre-wrap break-all flex-1 font-mono text-xs leading-relaxed {% if 'error' in line|lower or 'err' in line|lower or 'fail' in line|lower %}text-rose-400{% elif 'warn' in line|lower %}text-amber-300{% elif 'info' in line|lower %}text-zinc-300{% endif %}">{{ line }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="py-12 text-center text-zinc-500 font-mono text-xs">
+  [Tidak ada output log baru dari kontainer]
+</div>
+{% endif %}
+
